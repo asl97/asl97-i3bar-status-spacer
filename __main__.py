@@ -35,7 +35,7 @@ def bar(width):
     # active network link speed monitor
     for interface, sup, sdown in systemstat.netlink(exclude={'lo'}):
         iud = "{sup}/{sdown} (%s)".format(sup=sup, sdown=sdown)
-        jout.append({"full_text": iud%interface, "short_text": iud%interface[0], "align": "center"})
+        jout.append({"full_text": iud%interface, "short_text": iud%interface[0]})
 
     # cpu usage percentage
     cpu = systemstat.cpu()
