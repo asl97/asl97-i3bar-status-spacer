@@ -1,6 +1,5 @@
 import time
 import psutil
-import functools
 
 def _parsesendrecv(interface, new, old):
     up = max(new[interface].bytes_sent - old[interface].bytes_sent, -1)
