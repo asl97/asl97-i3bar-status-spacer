@@ -28,3 +28,13 @@ for items in item_set:
     print(dumb(items, 60))
     print(smart(items, 60))
     print("-"*20)
+
+# output of above, see how the items are always align for the smart placement?
+#--------------------
+#item               lol               wat               lol               really longest item
+#item                   lol                    wat                    lol really longest item
+#--------------------
+#--------------------
+#really longest item               lol               wat               lol               item
+#really longest item    lol                    wat                    lol                item
+#--------------------
