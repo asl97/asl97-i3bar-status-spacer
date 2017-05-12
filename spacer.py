@@ -21,8 +21,10 @@ def expander(bar, width, separator="|"):
         if item == None: # Skip disabled separator
             continue
         if item == "spacer": # We disable our separator in between spacer
-            bar[i-1] = None
-            bar[i+1] = None
+            if i-1 > 0:
+                bar[i-1] = None
+            if i+1 < len(bar):
+                bar[i+1] = None
             continue
 
         # Disable and remove i3bar separators
