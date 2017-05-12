@@ -13,6 +13,7 @@ def expander(bar, width, separator="|"):
     """
     # We starts with 0 length
     full = short = 0
+    free = 0
 
     # Insert our own separator
     bar = intersperse(bar, {"full_text": separator})
@@ -21,6 +22,11 @@ def expander(bar, width, separator="|"):
         if item == None: # Skip disabled separator
             continue
         if item == "spacer": # We disable our separator in between spacer
+            # If both side are non-disable separators, we add one to the amount of free space
+            # not quite sure how it works though.
+            if i-1 > 0 and i+1 < len(bar):
+                if bar[i-1] != None and bar[i+1] != None:
+                    free += 1
             if i-1 > 0:
                 bar[i-1] = None
             if i+1 < len(bar):
@@ -58,9 +64,17 @@ def expander(bar, width, separator="|"):
     # Currently it's implemented using same amount of space for all spacer
     # Might want to upgrade it to take account of item space so item stay in the same area
     # see baralignment.smart
-    free_space = width - length
+    free_space = width - length + free
     num_of_spacer = bar.count("spacer")
-    space_per_spacer = (free_space//num_of_spacer)+1
+    space_per_spacer = (free_space//num_of_spacer)
+    left_over = free_space%num_of_spacer
 
-    spacer = {"full_text":" "*space_per_spacer, "separator":False, "separator_block_width":0}
-    return [spacer if item == "spacer" else item for item in bar]
+    # We add left over spaces into each spacers
+    spacer_index = 0
+    for i, item in enumerate(bar):
+        if item == "spacer":
+            bar[i] = {"full_text":" "*(space_per_spacer+(1 if spacer_index<left_over else 0)), "separator":False, "separator_block_width":0}
+            spacer_index += 1
+
+    return bar
+
