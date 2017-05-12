@@ -22,8 +22,11 @@ def bar(width):
 
     return spacer.expander(jout, width)
 
+interval = 1
+width = 194
+
 while True:
-    print(json.dumps(bar(194)) + ",")
+    print(json.dumps(bar(width)) + ",")
     sys.stdout.flush()
-    time.sleep(1)
+    time.sleep(interval)
 
