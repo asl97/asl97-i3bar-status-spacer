@@ -1,3 +1,5 @@
+import subprocess
+import threading
 import json
 import time
 import sys
@@ -7,7 +9,7 @@ import systemstat
 import spacer
 
 # Send the header so that i3bar knows we want to use JSON:
-print('{"version":1}')
+print('{"version":1, "click_events":true}')
 
 # Begin the endless array.
 print('[')
@@ -45,6 +47,7 @@ def bar(width):
     jout.append({"full_text": "Ram: %d%%" % ram, "color": color(ram), "min_width": "Ram: 100%", "align": "center"})
     # date time
     jout.append({"full_text": systemstat.datetime()})
+    jout.append({"full_text": "T+", "name":"timidity++ config"})
 
     return spacer.expander(jout, width)
 
@@ -56,6 +59,24 @@ def bartext(width):
 # todo, find out width somehow, manual way:
 #print(json.dumps([{"full_text": 'y'+'|'*193}])+",") #means 194 as width
 #input()
+
+def stdin_reader():
+    while True:
+        line = sys.stdin.readline()
+        if line:
+            if line == "[\n":
+                continue
+            if line[0] == ',':
+                line = line[1:]
+            data = json.loads(line)
+            if "name" in data:
+                if data["name"] == "timidity++ config":
+                    subprocess.check_call(["i3-msg", "exec", "gedit", "/etc/timidity++.cfg"], stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        else:
+            break
+
+t = threading.Thread(target=stdin_reader, daemon=True)
+t.start()
 
 while True:
     print(json.dumps(bar(194)) + ",")
